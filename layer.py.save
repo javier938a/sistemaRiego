@@ -1,0 +1,41 @@
+from yowsup.layers.interface                           import YowInterfaceLayer, ProtocolEntityCallback
+from yowsup.layers.protocol_messages.protocolentities  import TextMessageProtocolEntity
+from yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptProtocolEntity
+from yowsup.layers.protocol_acks.protocolentities      import OutgoingAckProtocolEntity
+import RPi.GPIO as GPIO
+import time
+
+class EchoLayer(YowInterfaceLayer):
+
+    @ProtocolEntityCallback("message")
+    def onMessage(self, messageProtocolEntity):
+        #send receipt otherwise we keep receiving the same message over and over
+       
+        pinVal=2#Definiendo pin de la valvula
+        pinBon = 3#definiendo pin de la Bonba
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(led,GPIO.OUT)
+        GPIO.setup(pin
+        if True:
+            receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), 'read', messageProtocolEntity.getParticipant())
+            print messageProtocolEntity.getBody()
+            sms = messageProtocolEntity.getBody()
+            notif = ""
+            if sms =="ON":
+                notif= "Sistema de riego encendido"
+                GPIO.output(led,GPIO.HIGH)
+                time.sleep(1)
+            elif sms == "OFF":
+                notif="Sistema de riego apagado"
+                GPIO.output(LED,GPIO.LOW)
+                time.sleep(1)
+            if notif=="": 
+                notif = "Comando no valido"
+            outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
+            self.toLower(receipt)
+            self.toLower(outgoingMessageProtocolEntity)
+
+    @ProtocolEntityCallback("receipt")
+    def onReceipt(self, entity):
+        ack = OutgoingAckProtocolEntity(entity.getId(), "receipt", entity.getType(), entity.getFrom())
+        self.toLower(ack)
