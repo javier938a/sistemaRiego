@@ -19,26 +19,31 @@ class EchoLayer(YowInterfaceLayer):
         if True:
             receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), 'read', messageProtocolEntity.getParticipant())
             print messageProtocolEntity.getBody()
-            sms = messageProtocolEntity.getBody()#Capturamos el mensaje en una variable sms proveniente de algun numero de telefono
+            sms = messageProtocolEntity.getBody()
             notif = ""
-            if sms =="OFF" or sms = "off":# si el mensaje es == off se apaga
+            if sms =="OFF":
                 notif= "Sistema de riego Apagado"
-                GPIO.output(pinVal,GPIO.HIGH)#apaga la valvula
-                GPIO.output(pinBon,GPIO.HIGH)#apaga la bonba
-
+                GPIO.output(pinVal,GPIO.HIGH)
+                GPIO.output(pinBon,GPIO.HIGH)
+                outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
+                self.toLower(receipt)
+                self.toLower(outgoingMessageProtocolEntity)
                 
-            elif sms == "ON" or sms = "ON":
+            elif sms == "ON":
                 notif="Sistema de riego encendido"
-                GPIO.output(pinVal,GPIO.LOW)# enciende la valvula
-                GPIO.output(pinBon,GPIO.LOW)#enciende la bonba
-                time.sleep(900) #adormece por 15 minutos 
-                GPIO.output(pinVal,GPIO.HIGH)#apaga la valvula
-                GPIO.output(pinBon,GPIO.HIGH)#apaga la bonba
-            if notif=="": #si sms vacio significa que no ha recibido nada y mandara un mensaje que el comando es invalido
+                GPIO.output(pinVal,GPIO.LOW)
+                GPIO.output(pinBon,GPIO.LOW)
+                time.sleep(60)
+                GPIO.output(pinVal,GPIO.HIGH)
+                GPIO.output(pinBon,GPIO.HIGH)
+                outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
+                self.toLower(receipt)
+                self.toLower(outgoingMessageProtocolEntity)
+            if notif=="": 
                 notif = "Comando no valido"
-            outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
-            self.toLower(receipt)# se envia el mensaje al usuario de wassap
-            self.toLower(outgoingMessageProtocolEntity)
+                outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
+                self.toLower(receipt)
+                self.toLower(outgoingMessageProtocolEntity)
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
