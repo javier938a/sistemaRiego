@@ -19,21 +19,25 @@ class EchoLayer(YowInterfaceLayer):
         if True:
             receipt = OutgoingReceiptProtocolEntity(messageProtocolEntity.getId(), messageProtocolEntity.getFrom(), 'read', messageProtocolEntity.getParticipant())
             print messageProtocolEntity.getBody()
-            sms = messageProtocolEntity.getBody()
+            sms = messageProtocolEntity.getBody()#Capturamos el mensaje en una variable sms proveniente de algun numero de telefono
             notif = ""
-            if sms =="OFF":
+            if sms =="OFF" or sms = "off":# si el mensaje es == off se apaga
                 notif= "Sistema de riego Apagado"
-                GPIO.output(pinVal,GPIO.HIGH)
-                GPIO.output(pinBon,GPIO.HIGH)
+                GPIO.output(pinVal,GPIO.HIGH)#apaga la valvula
+                GPIO.output(pinBon,GPIO.HIGH)#apaga la bonba
+
                 
-            elif sms == "ON":
+            elif sms == "ON" or sms = "ON":
                 notif="Sistema de riego encendido"
-                GPIO.output(pinVal,GPIO.LOW)
-                GPIO.output(pinBon,GPIO.LOW)
-            if notif=="": 
+                GPIO.output(pinVal,GPIO.LOW)# enciende la valvula
+                GPIO.output(pinBon,GPIO.LOW)#enciende la bonba
+                time.sleep(900) #adormece por 15 minutos 
+                GPIO.output(pinVal,GPIO.HIGH)#apaga la valvula
+                GPIO.output(pinBon,GPIO.HIGH)#apaga la bonba
+            if notif=="": #si sms vacio significa que no ha recibido nada y mandara un mensaje que el comando es invalido
                 notif = "Comando no valido"
             outgoingMessageProtocolEntity = TextMessageProtocolEntity(notif, to = messageProtocolEntity.getFrom())
-            self.toLower(receipt)
+            self.toLower(receipt)# se envia el mensaje al usuario de wassap
             self.toLower(outgoingMessageProtocolEntity)
 
     @ProtocolEntityCallback("receipt")

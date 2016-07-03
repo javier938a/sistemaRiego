@@ -1,5 +1,6 @@
 from yowsup.stacks import  YowStackBuilder
 from layer import EchoLayer
+from humedadLayer import HumedadLayer
 from yowsup.layers.auth import AuthError
 from yowsup.layers import YowLayerEvent
 from yowsup.layers.network import YowNetworkLayer
@@ -13,6 +14,7 @@ if __name__==  "__main__":
     stack = stackBuilder\
         .pushDefaultLayers(True)\
         .push(EchoLayer)\
+        .push(HumedadLayer)\
         .build()
 
     stack.setCredentials(credentials)
