@@ -22,14 +22,14 @@ class HumedadLayer(YowInterfaceLayer):
 				print "prueva si el suelo esta mojado"
 				valor = GPIO.input(hume)
 		    if valor == 0:#si la tierra esta seca regara por 15 minutos
-			    GPIO.output(pinVal,GPIO.HIGH)#enciende la valvula 
-			    GPIO.output(pinBon,GPIO.HIGH)#enciende la bonba
-			    time.sleep(900)#adormese el sistema por 15 minutos 
-			    GPIO.output(pinVal,GPIO.LOW)#pasado los 15 apaga la valvula 
-			    GPIO.output(pinBon,GPIO.LOW)#apaga la bonba
+                GPIO.output(pinVal,GPIO.LOW)# enciende la valvula
+                GPIO.output(pinBon,GPIO.LOW)#enciende la bonba
+                time.sleep(900) #adormece por 15 minutos 
+                GPIO.output(pinVal,GPIO.HIGH)#apaga la valvula
+                GPIO.output(pinBon,GPIO.HIGH)#apaga la bonba
 			elif valor ==1:
-				GPIO.output(pinVal,GPIO.LOW)# si el la tierra esta humeda se apagan los aparatos bonba  valbula
-				GPIO.output(pinBon,GPIO.LOW)
+				GPIO.output(pinVal,GPIO.HIGH)# si el la tierra esta humeda se apagan los aparatos bonba  valbula
+				GPIO.output(pinBon,GPIO.HIGH)
 		
 		
     @ProtocolEntityCallback("message")
